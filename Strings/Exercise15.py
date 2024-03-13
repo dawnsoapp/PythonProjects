@@ -6,4 +6,3 @@ def backwards():
     print(new_string)
 
 backwards()
-# adding some comments to test commits on VM
