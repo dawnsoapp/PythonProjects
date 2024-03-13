@@ -71,19 +71,14 @@ def login_attempts(password):
                 break
         elif attempt == password:
             break
-    print(retry, request_new)
     return [retry, request_new]
-
-
-def enter_pin():
-    return
 
 def new_password(password, pin):
     # allow user to create a new password if they forgot 
     # special: prompt user for 4-digit code to change
-    check_pin = int(input("Please provide PIN number here: "))
     attempt = 0 
-    while attempt <= 3:
+    while attempt < 3:
+        check_pin = int(input("Please provide PIN number here: "))
         if check_pin != pin:
             attempt += 1
             print(f"Invalid PIN. You have used {attempt}/3 attempts.")
@@ -91,36 +86,44 @@ def new_password(password, pin):
         elif check_pin == pin:
             print("PIN successful. Transferring you to update new password.")
             password = create_password()
+            pin = generate_pin(password)
             break
-    return password
+    return [password, pin]
 
 def login(username, password, pin):
-    # prompt user for username
-    print("Welcome to DawnBanks Login. Please Login your credentials here. \n")
-    validate_name = input("Username: ")
-    print(validate_name)
-    # prompt user for password
-    validate_password = input("Password: ")
-    # if password incorrect, give them option to change
-    if validate_name == username and validate_password != password:
-        print("Invalid input.\n")
-        attempts = login_attempts(password)
-        if attempts[0] >= 3:
-            print("Sorry. You have exceeded the limit of tries. Please check back later.")
-            return
-        elif attempts[0] <=2 and attempts[1] == True:
-            password = new_password(password, pin)
-        elif attempts[0] < 3 and attempts[1] == False:
-            print(f"Welcome back {username}!")
-        # if password correct, give them a greeting message
-    elif validate_name == username and validate_password == password:
-            print(f"Welcome back {username}!")
+    login_successful = False
+    while not login_successful:
+        # prompt user for username
+        print("Welcome to DawnBanks Login. Please Login your credentials here. \n")
+        validate_name = input("Username: ")
+        print(validate_name)
+        # prompt user for password
+        validate_password = input("Password: ")
+        # if password incorrect, give them option to change
+        if validate_name == username and validate_password != password:
+            print("Invalid input.\n")
+            attempts = login_attempts(password)
+            if attempts[0] >= 3:
+                print("Sorry. You have exceeded the limit of tries. Please check back later.")
+                return
+            elif attempts[0] <=2 and attempts[1] == True:
+                request = new_password(password, pin)
+                password = request[0]
+                pin = request[1]
+                continue
+            elif attempts[0] < 3 and attempts[1] == False:
+                print(f"Welcome back {username}!")
+                login_successful = True
+            # if password correct, give them a greeting message
+        elif validate_name == username and validate_password == password:
+                print(f"Welcome back {username}!")
+                login_successful = True
 
 def DawnBanks():   
     # set up menu 
     option = int(input("Welcome to DawnBanks.\n"
         "If you would like to create an account, please enter 1.\n"
-        "If you are a returning guess, please enter 2 to sign in.\n"
+        "If you are a returning guest, please enter 2 to sign in.\n"
         "If you wish to exit, please enter 3.\n"
         ""))
     if option == 1:
@@ -130,12 +133,13 @@ def DawnBanks():
         print("You are all set. Let's sign you in.")
         option = 2
     if option == 2:
-        login(username, password)
+        login(username, password, pin)
+    elif option == 3:
+        print("Thank you for visiting DawnBanks. Have a good day.")
     return
+    
 
 DawnBanks()
 
 # TO-DO LIST
-# figure out how to connect the new password from pin to the official password
-# implement exit option
 # allow for sign outs and logins so option 2 can be used on opening
