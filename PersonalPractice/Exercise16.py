@@ -131,19 +131,11 @@ def DawnBanks():
         option = 2
     if option == 2:
         login(username, password)
-
-
-    # TO-DO LIST
-        # figure out how to connect the new password from pin to the official password
-        # implement exit option
-        # allow for sign outs and logins so option 2 can be used on opening
-        
-        
-        
-        
-        
-        
-    
     return
 
-login()
+DawnBanks()
+
+# TO-DO LIST
+# figure out how to connect the new password from pin to the official password
+# implement exit option
+# allow for sign outs and logins so option 2 can be used on opening
